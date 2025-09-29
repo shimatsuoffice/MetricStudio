@@ -1,53 +1,60 @@
-\# Instagram API Review Pack
+README.md（英語版・審査員用）
+# Creator Review Tool
 
+This project is a **minimal FastAPI demo app** prepared for Meta App Review.  
+It demonstrates how a creator can log in via **Facebook Login** and view their own profile and insights.
 
+## 🔧 Features
+- Login with Facebook/Instagram
+- Fetch basic profile information
+- Fetch media insights (likes, comments, engagement)
 
-This app demonstrates \*\*minimum scopes\*\* for Instagram Graph API and provides a short, repeatable flow for Meta App Review.
+##  How to run locally
 
-
-
-\## Files
-
-\- `app.py` — FastAPI single-file app (real API flows)
-
-\- `requirements.txt`
-
-\- `.env.example`
-
-
-
-\## How to run
-
+### 1. Clone repository
 ```bash
+git clone https://github.com/your-username/Creator_Review_Tool.git
+cd Creator_Review_Tool
 
-python -m venv .venv
+2. Create virtual environment
+python -m venv venv
+source venv/bin/activate   # on macOS/Linux
+venv\Scripts\activate      # on Windows
 
-\# Windows: .venv\\Scripts\\activate
-
-\# macOS/Linux: source .venv/bin/activate
-
+3. Install dependencies
 pip install -r requirements.txt
 
+4. Environment variables
+
+Create a .env file based on .env.example:
+
+APP_ID=your_app_id
+APP_SECRET=your_app_secret
+REDIRECT_URI=https://review.kaitekilife2.com/callback
+
+5. Run app
 uvicorn app:app --host 0.0.0.0 --port 8000
 
-## Scopes used
 
-- `instagram_basic` — display IG profile fields
-- `instagram_manage_insights` — display insights
-- `pages_show_list` — page linkage for business/creator
+Access: http://localhost:8000
 
-## Review steps (<=3 minutes)
+Deployed test environment
 
-1. Open `https://<REVIEW_URL>/` and click `/auth/login`
-2. After callback, GET `/auth/status` returns `{ "logged_in": true }`
-3. GET `/me/profile` returns `id, username, followers_count, media_count`
-4. GET `/me/insights?metric=impressions,reach` returns JSON (period=day)
-5. POST `/auth/logout`, then `/auth/status` returns `false`
+The app is deployed on Render:
 
-## Privacy / Data Deletion
+ https://review.kaitekilife2.com
 
-- `/privacy` and `/data-deletion` routes are included.
+Testing instructions for reviewers
 
+Go to the deployed URL above.
 
+Click Login with Facebook.
 
+Approve requested permissions.
 
+You will see your profile and insights.
+
+Contact
+
+For any questions during the review, please contact:
+support@kaitekilife2.com
