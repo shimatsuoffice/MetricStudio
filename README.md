@@ -4,7 +4,7 @@ README.md（英語版・審査員用）
 This project is a **minimal FastAPI demo app** prepared for Meta App Review.  
 It demonstrates how a creator can log in via **Facebook Login** and view their own profile and insights.
 
-## 🔧 Features
+##  Features
 - Login with Facebook/Instagram
 - Fetch basic profile information
 - Fetch media insights (likes, comments, engagement)
@@ -58,3 +58,4 @@ Contact
 
 For any questions during the review, please contact:
 support@kaitekilife2.com
+
