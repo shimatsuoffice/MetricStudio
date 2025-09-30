@@ -1,60 +1,71 @@
-#  `README_JP.md`（日本語版・社内用）
+# MetricStudio
 
-```markdown
-# クリエイター レビュー ツール
+このプロジェクトは、**Meta App Review（審査）用の最小構成デモアプリ**です。  
+Facebookログインを利用して、クリエイター自身のプロフィールやインサイトを表示できます。
 
-このプロジェクトは **Meta アプリ審査用の最小 FastAPI デモアプリ** です。  
-クリエイターが **Facebookログイン** を通じて、自分のプロフィールやインサイトを閲覧できる流れを確認できます。
+## 機能
+- Facebook/Instagram ログイン
+- 基本プロフィール情報の取得
+- メディアのインサイト（リーチ・インプレッションなど）の取得
 
-##  機能
-- Facebook/Instagramでのログイン
-- プロフィール情報の取得
-- 投稿インサイト（いいね数、コメント数、エンゲージメント）の取得
+## ローカル実行手順
 
-##  ローカルでの実行方法
-
-### 1. リポジトリをクローン
+### 1. リポジトリの取得
 ```bash
-git clone https://github.com/your-username/Creator_Review_Tool.git
-cd Creator_Review_Tool
+git clone https://github.com/your-username/MetricStudio.git
+cd MetricStudio
 2. 仮想環境の作成
 bash
 コードをコピーする
 python -m venv venv
 source venv/bin/activate   # macOS/Linux
 venv\Scripts\activate      # Windows
-3. 依存関係をインストール
+3. 依存パッケージのインストール
 bash
 コードをコピーする
 pip install -r requirements.txt
-4. 環境変数
-.env.example をコピーして .env を作成します:
+4. 環境変数ファイルの設定
+.env.example をコピーして .env を作成してください。
 
 ini
 コードをコピーする
-APP_ID=あなたのAppID
-APP_SECRET=あなたのAppSecret
-REDIRECT_URI=https://review.kaitekilife2.com/callback
-5. アプリを起動
+META_APP_ID=your_app_id
+META_APP_SECRET=your_app_secret
+REDIRECT_URI=https://metricstudio.kaitekilife2.com/auth/callback
+5. アプリの起動
 bash
 コードをコピーする
-uvicorn app:app --host 0.0.0.0 --port 8000
-アクセス: http://localhost:8000
+uvicorn app_submit:app --host 0.0.0.0 --port 8000
+ブラウザでアクセス: http://localhost:8000
 
-デプロイ済みテスト環境
-Renderにデプロイ済みです：
+デプロイ環境
+Render 上にデプロイされています：
 
- https://review.kaitekilife2.com
+👉 https://metricstudio.kaitekilife2.com
 
-審査員向けテスト手順
-上記URLにアクセス
+審査員の方へのテスト手順
+上記URLへアクセスしてください。
 
-Facebookでログイン をクリック
+Facebookでログイン をクリック。
 
-権限を承認
+権限を承認してください。
 
-プロフィールとインサイトが表示されます
+プロフィールとインサイトが表示されます。
 
-問い合わせ先
-審査中の連絡先:
-support@kaitekilife2.com
+## Deployment (Render)
+
+### 環境変数設定
+- META_APP_ID
+- META_APP_SECRET
+- APP_SECRET
+- REDIRECT_URI
+- ALLOWED_ORIGINS
+
+### Start Command
+```bash
+uvicorn app_submit:app --host 0.0.0.0 --port $PORT
+
+
+連絡先
+審査に関する質問は以下にご連絡ください：
+📧 info2@kaitekilife2.com
