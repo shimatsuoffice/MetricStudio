@@ -198,7 +198,7 @@ async def privacy():
         "<h1>Privacy Policy</h1>"
         "<p>This application uses Instagram Graph API with minimum scopes to display basic profile and insights data. "
         "No personal data is stored on our servers; data is shown only during your session.</p>"
-        "<p>Contact: support@example.com</p>"
+        "<p>Contact: info2@kaitekilife2.com</p>"
     )
 
 
@@ -207,7 +207,7 @@ async def data_deletion():
     return HTMLResponse(
         "<h1>Data Deletion Instructions</h1>"
         "<p>We do not persist user data. If you want to request deletion of any server-side logs or residuals, "
-        "please email support@example.com with your Meta User ID.</p>"
+        "please email info2@kaitekilife2.com with your Meta User ID.</p>"
     )
 
 
