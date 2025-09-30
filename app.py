@@ -1,10 +1,20 @@
 import os
+
 import secrets
 import urllib.parse
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv(dotenv_path=Path(__file__).with_name(".env"))
 from typing import Optional
 
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import JSONResponse, HTMLResponse, RedirectResponse, PlainTextResponse
+from fastapi.responses import (
+    JSONResponse,
+    HTMLResponse,
+    RedirectResponse,
+    PlainTextResponse,
+)
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 import httpx
@@ -20,7 +30,11 @@ META_APP_ID = os.getenv("META_APP_ID", "")
 META_APP_SECRET = os.getenv("META_APP_SECRET", "")
 APP_SECRET = os.getenv("APP_SECRET", secrets.token_urlsafe(32))  # session secret
 REDIRECT_URI = os.getenv("REDIRECT_URI", "http://localhost:8000/auth/callback")
-ALLOWED_ORIGINS = [o.strip() for o in os.getenv("ALLOWED_ORIGINS", "http://localhost:8000").split(",") if o.strip()]
+ALLOWED_ORIGINS = [
+    o.strip()
+    for o in os.getenv("ALLOWED_ORIGINS", "http://localhost:8000").split(",")
+    if o.strip()
+]
 
 REQUIRED_SCOPES = [
     "instagram_basic",
@@ -40,7 +54,10 @@ app.add_middleware(
 )
 
 # cookie sessions
-app.add_middleware(SessionMiddleware, secret_key=APP_SECRET, same_site="lax", https_only=False)
+app.add_middleware(
+    SessionMiddleware, secret_key=APP_SECRET, same_site="lax", https_only=False
+)
+
 
 # ---- utils ----
 async def _http_get(url: str, params: dict):
@@ -49,11 +66,13 @@ async def _http_get(url: str, params: dict):
         r.raise_for_status()
         return r.json()
 
+
 def _require_login(request: Request) -> str:
     token = request.session.get("access_token")
     if not token:
         raise HTTPException(status_code=401, detail="not logged in")
     return token
+
 
 async def _exchange_code_for_token(code: str) -> dict:
     params = {
@@ -64,6 +83,7 @@ async def _exchange_code_for_token(code: str) -> dict:
     }
     return await _http_get(META_OAUTH_TOKEN, params)
 
+
 async def _get_ig_user_id(access_token: str) -> Optional[str]:
     params = {"access_token": access_token, "fields": "instagram_business_account"}
     data = await _http_get(f"{GRAPH_BASE}/me/accounts", params)
@@ -72,6 +92,7 @@ async def _get_ig_user_id(access_token: str) -> Optional[str]:
         if ig and ig.get("id"):
             return ig["id"]
     return None
+
 
 # ---- routes ----
 @app.get("/", response_class=JSONResponse)
@@ -91,6 +112,7 @@ async def root():
         },
     }
 
+
 @app.get("/auth/login")
 async def auth_login(request: Request):
     if not META_APP_ID or not META_APP_SECRET:
@@ -107,8 +129,14 @@ async def auth_login(request: Request):
     url = f"{META_OAUTH_AUTHZ}?{urllib.parse.urlencode(params)}"
     return RedirectResponse(url)
 
+
 @app.get("/auth/callback")
-async def auth_callback(request: Request, code: Optional[str] = None, state: Optional[str] = None, error: Optional[str] = None):
+async def auth_callback(
+    request: Request,
+    code: Optional[str] = None,
+    state: Optional[str] = None,
+    error: Optional[str] = None,
+):
     if error:
         return JSONResponse({"ok": False, "error": error}, status_code=400)
     saved = request.session.get("oauth_state")
@@ -123,25 +151,34 @@ async def auth_callback(request: Request, code: Optional[str] = None, state: Opt
     request.session["access_token"] = access_token
     return RedirectResponse("/auth/status")
 
+
 @app.get("/auth/status")
 async def auth_status(request: Request):
     token = request.session.get("access_token")
     return {"logged_in": bool(token)}
+
 
 @app.post("/auth/logout")
 async def auth_logout(request: Request):
     request.session.clear()
     return {"ok": True}
 
+
 @app.get("/me/profile")
 async def me_profile(request: Request):
     access_token = _require_login(request)
     ig_user_id = await _get_ig_user_id(access_token)
     if not ig_user_id:
-        raise HTTPException(400, detail="no instagram_business_account linked to this user")
-    params = {"access_token": access_token, "fields": "id,username,followers_count,media_count"}
+        raise HTTPException(
+            400, detail="no instagram_business_account linked to this user"
+        )
+    params = {
+        "access_token": access_token,
+        "fields": "id,username,followers_count,media_count",
+    }
     data = await _http_get(f"{GRAPH_BASE}/{ig_user_id}", params)
     return data
+
 
 @app.get("/me/insights")
 async def me_insights(request: Request, metric: str):
@@ -150,10 +187,13 @@ async def me_insights(request: Request, metric: str):
         raise HTTPException(400, detail="metric query parameter is required")
     ig_user_id = await _get_ig_user_id(access_token)
     if not ig_user_id:
-        raise HTTPException(400, detail="no instagram_business_account linked to this user")
+        raise HTTPException(
+            400, detail="no instagram_business_account linked to this user"
+        )
     params = {"access_token": access_token, "metric": metric, "period": "day"}
     data = await _http_get(f"{GRAPH_BASE}/{ig_user_id}/insights", params)
     return data
+
 
 @app.get("/privacy", response_class=HTMLResponse)
 async def privacy():
@@ -164,6 +204,7 @@ async def privacy():
     """
     return HTMLResponse(html)
 
+
 @app.get("/data-deletion", response_class=HTMLResponse)
 async def data_deletion():
     html = """
@@ -172,10 +213,13 @@ async def data_deletion():
     """
     return HTMLResponse(html)
 
+
 @app.get("/healthz", response_class=PlainTextResponse)
 async def healthz():
     return PlainTextResponse("ok")
 
+
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
