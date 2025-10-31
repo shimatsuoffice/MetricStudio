@@ -44,3 +44,14 @@ async def auth_callback(code: str):
         )
     token = r.json().get("access_token")
     return JSONResponse({"status": "ok", "access_token": token})
+
+@app.get("/debug/me_accounts")
+async def debug_me_accounts(access_token: str):
+    async with httpx.AsyncClient(timeout=20.0) as client:
+        r = await client.get(
+            "https://graph.facebook.com/v20.0/me/accounts",
+            params={"access_token": access_token}
+        )
+    return JSONResponse({"status": r.status_code, "data": r.json()})
+
+
