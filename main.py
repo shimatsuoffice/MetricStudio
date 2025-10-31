@@ -13,8 +13,8 @@ def health():
 
 # === 必要な環境変数 ===
 # Render の「Environment」か GitHub の Actions/Render で設定しておくこと
-APP_ID = os.getenv("META_APP_ID")              # 例: 2429.........
-APP_SECRET = os.getenv("META_APP_SECRET")      # 例: xxxxxxxxxxxxx
+APP_ID = os.getenv("META_APP_ID")             
+APP_SECRET = os.getenv("META_APP_SECRET")     
 REDIRECT_URI = (
     os.getenv("OAUTH_REDIRECT_URI")
     or os.getenv("REDIRECT_URI")
@@ -74,4 +74,5 @@ async def auth_callback(request: Request, code: str | None = None, error: str | 
         "scopes_requested": SCOPES.split(","),
         "note": "このトークンはDB保存していません（セッション表示のみ）"
     })
+
 
