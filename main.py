@@ -15,7 +15,12 @@ def health():
 # Render の「Environment」か GitHub の Actions/Render で設定しておくこと
 APP_ID = os.getenv("META_APP_ID")              # 例: 2429.........
 APP_SECRET = os.getenv("META_APP_SECRET")      # 例: xxxxxxxxxxxxx
-REDIRECT_URI = os.getenv("OAUTH_REDIRECT_URI", "https://metricstudio.onrender.com/auth/callback")
+REDIRECT_URI = (
+    os.getenv("OAUTH_REDIRECT_URI")
+    or os.getenv("REDIRECT_URI")
+    or "https://metricstudio.onrender.com/auth/callback"
+)
+
 
 # 要求スコープ（2025年仕様：instagram_business_* を使用）
 SCOPES = "instagram_business_basic,pages_show_list,instagram_business_manage_insights"
@@ -69,3 +74,4 @@ async def auth_callback(request: Request, code: str | None = None, error: str | 
         "scopes_requested": SCOPES.split(","),
         "note": "このトークンはDB保存していません（セッション表示のみ）"
     })
+
