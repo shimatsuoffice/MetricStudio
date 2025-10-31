@@ -23,7 +23,7 @@ REDIRECT_URI = (
 
 
 # 要求スコープ（2025年仕様：instagram_business_* を使用）
-SCOPES = "instagram_business_basic,pages_show_list,instagram_business_manage_insights"
+pages_show_list
 
 FB_AUTH_BASE = "https://www.facebook.com/v20.0/dialog/oauth"
 FB_TOKEN_ENDPOINT = "https://graph.facebook.com/v20.0/oauth/access_token"
@@ -74,5 +74,6 @@ async def auth_callback(request: Request, code: str | None = None, error: str | 
         "scopes_requested": SCOPES.split(","),
         "note": "このトークンはDB保存していません（セッション表示のみ）"
     })
+
 
 
