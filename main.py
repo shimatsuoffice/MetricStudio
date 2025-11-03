@@ -25,7 +25,7 @@ REDIRECT_URI = (
     or os.getenv("REDIRECT_URI")
     or "https://metricstudio.onrender.com/auth/callback"
 )
-SCOPES = os.getenv("OAUTH_SCOPES") or "pages_show_list,instagram_business_basic"
+SCOPES = os.getenv("OAUTH_SCOPES") or "instagram_basic,pages_show_list"
 
 # --- OAuth開始（スコープ付き & 再同意） ---
 @app.get("/auth/login")
@@ -110,3 +110,4 @@ async def debug_ig_basic(page_id: str, access_token: str):
             },
         )
     return JSONResponse({"status": r.status_code, "data": r.json()})
+
